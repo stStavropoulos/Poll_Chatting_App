@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "237241924567",
+    "project_id": "democracychatapp",
+    "storage_bucket": "democracychatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237241924567:android:d591d3830a07a859a5a992",
+        "android_client_info": {
+          "package_name": "com.example.chatappdemocracy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_3mrd-kuALSSOMaV9IWD0MveNzmDoN_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
