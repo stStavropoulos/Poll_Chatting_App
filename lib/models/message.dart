@@ -4,7 +4,7 @@ class Message {
   final String senderId;
   final String senderEmail;
   final String senderNickname; // Add sender's nickname
-  final String receiverId;
+
   final String message;
   final Timestamp timestamp;
 
@@ -12,7 +12,6 @@ class Message {
     required this.senderId,
     required this.senderEmail,
     required this.senderNickname,
-    required this.receiverId,
     required this.message,
     required this.timestamp,
   });
@@ -23,7 +22,6 @@ class Message {
       'senderId': senderId,
       'senderEmail': senderEmail,
       'senderNickname': senderNickname, // Include sender's nickname in the map
-      'receiverId': receiverId,
       'message': message,
       'timestamp': timestamp,
     };

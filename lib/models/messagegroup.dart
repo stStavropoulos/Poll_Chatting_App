@@ -12,7 +12,7 @@ class MessageGroup {
     required this.senderEmail,
     required this.senderNickname,
     required this.messageGroup,
-    required this.timestamp,
+    required this.timestamp, required List<String> participants,
   });
 
   Map<String, dynamic> toMap() {
