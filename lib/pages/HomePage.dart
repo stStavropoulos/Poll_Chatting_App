@@ -198,22 +198,16 @@ class HomePage extends StatelessWidget {
                 }
               },
               icon: Icon(Icons.add),
-              color: Colors.deepPurple,
-            ),
-            IconButton(
-              onPressed: () {
-                // Logic for Chat icon
-              },
-              icon: Icon(Icons.chat),
               color: Colors.white,
             ),
+
             IconButton(
               onPressed: () {
                 // Logic for Person icon
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PersonalInfoPage(userId: "user_id"), // Pass the actual user ID
+                    builder: (context) => PersonalInfoPage(), // Pass the actual user ID
                   ),
                 );
               },

@@ -42,6 +42,68 @@ class ChatService {
     return 'DefaultNickname';
   }
 
+
+  Widget renderPollMessage({
+    required String question,
+    required String senderNickname,
+    required List<String> options,
+    required VoidCallback onVotePressed,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$senderNickname asks:',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(question),
+          ElevatedButton(
+            onPressed: onVotePressed,
+            child: Text('Vote'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget renderVoteMessage({
+    required List<String> selectedAnswers,
+    String? voterNickname, // Pass the voter nickname as a parameter
+    bool isVoteMessage = true, // Add a flag to indicate this is a vote message
+  }) {
+    // Customize this method based on how you want to display vote messages
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      decoration: BoxDecoration(
+        color: isVoteMessage ? Colors.purple : Colors.blue, // Customize the color for vote messages
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Vote: ${selectedAnswers.join(', ')}',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          if (voterNickname != null && voterNickname.isNotEmpty)
+            Text(
+              'Voter Nickname: $voterNickname', // Display the voter nickname
+              style: TextStyle(color: Colors.white),
+            ),
+        ],
+      ),
+    );
+  }
+
+
   Widget yourMessageWidget({
     required String message,
     required String senderNickname,
@@ -87,6 +149,7 @@ class ChatService {
         senderNickname: currentUserNickname,
         message: message,
         timestamp: timestamp,
+
       );
 
       await _firestore

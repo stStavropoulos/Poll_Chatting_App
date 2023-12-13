@@ -34,6 +34,7 @@ class _CreateGroupChatPageState extends State<CreateGroupChatPage> {
       appBar: AppBar(
         title: Text('Select Participants'),
         backgroundColor: Colors.purple,
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Color(0xFFC586FF),
       body: StreamBuilder(
@@ -72,12 +73,14 @@ class _CreateGroupChatPageState extends State<CreateGroupChatPage> {
                     createGroupChat(selectedUsers);
                   },
                   style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurpleAccent,
                     padding: EdgeInsets.symmetric(horizontal: 150), // Adjust horizontal padding
                   ),
                   child: Center(
                     child: Text(
                       "Create Chat Room",
                       style: TextStyle(color: Colors.white),
+
                     ),
                   ),
                 ),
@@ -101,7 +104,7 @@ class _CreateGroupChatPageState extends State<CreateGroupChatPage> {
                   ),
                 );
               },
-              icon: Icon(Icons.home, color: Colors.deepPurple),
+              icon: Icon(Icons.home, color: Colors.white),
             ),
 
             IconButton(
@@ -134,20 +137,14 @@ class _CreateGroupChatPageState extends State<CreateGroupChatPage> {
               icon: Icon(Icons.add),
               color: Colors.deepPurple,
             ),
-            IconButton(
-              onPressed: () {
-                // Logic for Chat icon
-              },
-              icon: Icon(Icons.chat),
-              color: Colors.white,
-            ),
+
               IconButton(
                       onPressed: () {
                       // Logic for Person icon
                       Navigator.push(
                       context,
                       MaterialPageRoute(
-                      builder: (context) => PersonalInfoPage(userId: "user_id"), // Pass the actual user ID
+                      builder: (context) => PersonalInfoPage(), // Pass the actual user ID
                       ),
                       );
                       },
