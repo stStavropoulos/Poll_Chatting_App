@@ -50,27 +50,44 @@ class _CreatePollPageState extends State<CreatePollPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              TextField(
-                controller: _questionController,
-                decoration: InputDecoration(
-                  labelText: 'Enter your poll question',
-                  labelStyle: TextStyle(color: Colors.black),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                child: TextField(
+                  controller: _questionController,
+                  decoration: InputDecoration(
+                    labelText: 'Enter your poll question',
+                    labelStyle: TextStyle(color: Colors.black),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.purple), // Set border color to purple
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: 16.0),
               for (int i = 0; i < _answerControllers.length; i++)
-                TextField(
-                  controller: _answerControllers[i],
-                  decoration: InputDecoration(
-                    labelText: 'Enter answer option ${i + 1}',
-                    labelStyle: TextStyle(color: Colors.black),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    controller: _answerControllers[i],
+                    decoration: InputDecoration(
+                      labelText: 'Enter answer option ${i + 1}',
+                      labelStyle: TextStyle(color: Colors.black),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.purple), // Set border color to purple
+                      ),
+                    ),
                   ),
                 ),
-              SizedBox(height: 16.0),
+              SizedBox(height: 24.0), // Increased space between the two buttons
               ElevatedButton(
                 onPressed: _addAnswerOption,
-                child: Text('Add Answer Option'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple, // Change button color to purple
+                  padding: EdgeInsets.symmetric(vertical: 16.0), // Increase vertical padding
+                ),
+                child: Text('Add Answer Option', style: TextStyle(color: Colors.white)),
               ),
+              SizedBox(height: 16.0), // Space between the two buttons
               ElevatedButton(
                 onPressed: () {
                   String question = _questionController.text;
@@ -86,7 +103,11 @@ class _CreatePollPageState extends State<CreatePollPage> {
                     // You can show a Snackbar or an alert
                   }
                 },
-                child: Text('Confirm'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple, // Change button color to purple
+                  padding: EdgeInsets.symmetric(vertical: 16.0), // Increase vertical padding
+                ),
+                child: Text('Confirm', style: TextStyle(color: Colors.white)),
               ),
             ],
           ),
@@ -95,6 +116,8 @@ class _CreatePollPageState extends State<CreatePollPage> {
     );
   }
 }
+
+
 
 
 

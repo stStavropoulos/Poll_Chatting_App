@@ -1,9 +1,11 @@
 import 'package:chatappdemocracy/pages/CreateGroup.dart';
 import 'package:chatappdemocracy/pages/PersonalInfo.dart';
 import 'package:chatappdemocracy/pages/SearchPage.dart';
+import 'package:chatappdemocracy/pages/Settings.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:chatappdemocracy/pages/GroupChat.dart'; // Import the ChatRoomPage
 
 class HomePage extends StatelessWidget {
@@ -45,6 +47,7 @@ class HomePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final groupData = groupChats[index].data() as Map<String, dynamic>;
                       final participants = groupData['participants'] as List<dynamic>;
+                      final groupImage = groupData['groupImage'] ?? null; // Assuming groupImage field exists in Firestore
 
                       return StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
@@ -81,14 +84,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                leading: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.primaries[index % Colors.primaries.length],
-                                  ),
-                                ),
+                                leading: _buildGroupAvatar(groupImage, index),
                                 title: FutureBuilder<List<String>>(
                                   future: _fetchUserNicknames(participants),
                                   builder: (context, snapshot) {
@@ -117,14 +113,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                leading: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.primaries[index % Colors.primaries.length],
-                                  ),
-                                ),
+                                leading: _buildGroupAvatar(groupImage, index),
                                 title: FutureBuilder<List<String>>(
                                   future: _fetchUserNicknames(participants),
                                   builder: (context, snapshot) {
@@ -152,67 +141,111 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-
       bottomNavigationBar: BottomAppBar(
         color: Colors.purple,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              onPressed: () {
-                // Navigate to the home page
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(), // Replace HomePage with the actual class name of your home page
-                  ),
-                );
-              },
-              icon: Icon(Icons.home, color: Colors.deepPurple),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // Navigate to the home page
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.home, color: Colors.deepPurple),
+                  tooltip: 'Home',
+                ),
+                Text('Home', style: TextStyle(fontSize: 12, color: Colors.deepPurple)),
+              ],
             ),
-
-            IconButton(
-              onPressed: () {
-                // Logic for Search icon
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CustomSearchPage(),
-                  ),
-                );
-              },
-              icon: Icon(Icons.search),
-              color: Colors.white,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // Logic for Search icon
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CustomSearchPage(),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.search),
+                  color: Colors.white,
+                  tooltip: 'Search',
+                ),
+                Text('Search', style: TextStyle(fontSize: 12, color: Colors.white)),
+              ],
             ),
-            IconButton(
-              onPressed: () async {
-                User? user = FirebaseAuth.instance.currentUser;
-                if (user != null) {
-                  String currentUserId = user.uid;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          CreateGroupChatPage(currentUserId: currentUserId),
-                    ),
-                  );
-                }
-              },
-              icon: Icon(Icons.add),
-              color: Colors.white,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    User? user = FirebaseAuth.instance.currentUser;
+                    if (user != null) {
+                      String currentUserId = user.uid;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateGroupChatPage(currentUserId: currentUserId),
+                        ),
+                      );
+                    }
+                  },
+                  icon: Icon(Icons.add),
+                  color: Colors.white,
+                  tooltip: 'Add',
+                ),
+                Text('Add', style: TextStyle(fontSize: 12, color: Colors.white)),
+              ],
             ),
-
-            IconButton(
-              onPressed: () {
-                // Logic for Person icon
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PersonalInfoPage(), // Pass the actual user ID
-                  ),
-                );
-              },
-              icon: Icon(Icons.person),
-              color: Colors.white,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // Logic for Person icon
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PersonalInfoPage(userId: ""),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.person),
+                  color: Colors.white,
+                  tooltip: 'My Profile',
+                ),
+                Text('My Profile', style: TextStyle(fontSize: 12, color: Colors.white)),
+              ],
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    // Logic for Profile icon
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SettingsPage(), // Replace with your profile page
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.settings),
+                  color: Colors.white,
+                  tooltip: 'Settings',
+                ),
+                Text('Settings', style: TextStyle(fontSize: 12, color: Colors.white)),
+              ],
             ),
           ],
         ),
@@ -234,5 +267,38 @@ class HomePage extends StatelessWidget {
 
     return userNicknameList;
   }
-}
 
+  Widget _buildGroupAvatar(String? groupImage, int index) {
+    if (groupImage != null) {
+      return FutureBuilder<String>(
+        future: _getImageUrl(groupImage),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircleAvatar(
+              backgroundColor: Colors.primaries[index % Colors.primaries.length],
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError || !snapshot.hasData) {
+            return CircleAvatar(
+              backgroundColor: Colors.primaries[index % Colors.primaries.length],
+              child: Icon(Icons.error, color: Colors.white),
+            );
+          } else {
+            return CircleAvatar(
+              backgroundImage: NetworkImage(snapshot.data!),
+            );
+          }
+        },
+      );
+    } else {
+      return CircleAvatar(
+        backgroundColor: Colors.primaries[index % Colors.primaries.length],
+      );
+    }
+  }
+
+  Future<String> _getImageUrl(String imagePath) async {
+    final ref = FirebaseStorage.instance.ref().child(imagePath);
+    return await ref.getDownloadURL();
+  }
+}

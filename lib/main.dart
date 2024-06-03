@@ -13,7 +13,8 @@ void main() async {
             apiKey: "AIzaSyC_3mrd-kuALSSOMaV9IWD0MveNzmDoN_E",
             projectId: "democracychatapp",
             appId: "1:237241924567:android:d591d3830a07a859a5a992",
-            messagingSenderId: '237241924567')
+            messagingSenderId: '237241924567',
+            storageBucket: "gs://democracychatapp.appspot.com")
         );
 
   runApp(

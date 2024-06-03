@@ -1,79 +1,67 @@
 import 'package:chatappdemocracy/pages/CreateGroup.dart';
 import 'package:chatappdemocracy/pages/HomePage.dart';
 import 'package:chatappdemocracy/pages/PersonalInfo.dart';
-import 'package:chatappdemocracy/pages/Settings.dart';
+import 'package:chatappdemocracy/pages/SearchPage.dart';
+import 'package:chatappdemocracy/pages/LoginPage.dart'; // Import your sign-in page
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class CustomSearchPage extends StatefulWidget {
-  @override
-  _CustomSearchPageState createState() => _CustomSearchPageState();
-}
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({Key? key}) : super(key: key);
 
-class _CustomSearchPageState extends State<CustomSearchPage> {
-  late TextEditingController _searchController;
+  void _signOut(BuildContext context) async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  @override
-  void initState() {
-    super.initState();
-    _searchController = TextEditingController();
+    // Show confirmation dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sign Out'),
+          content: Text('Are you sure you want to sign out?'),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Sign Out'),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
+                await _auth.signOut();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(), // Navigate to the sign-in page
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search'),
+        title: const Text('Settings'),
         backgroundColor: Colors.purple,
         automaticallyImplyLeading: false,
       ),
-      backgroundColor: Color(0xFFC986FF),
-      // Set the background color to match the homepage
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                // Implement real-time search logic here
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                hintText: 'Search...',
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('users')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-
-                  final users = snapshot.data!.docs;
-                  List<Widget> searchResults = [];
-
-                  for (var user in users) {
-                    final nickname = user['nickname'] as String;
-                    final userId = user['uid'] as String;
-
-                    if (nickname.toLowerCase().startsWith(
-                        _searchController.text.toLowerCase())) {
-                      searchResults.add(_buildUserTile(user));
-                    }
-                  }
-
-                  return ListView(
-                    children: searchResults,
-                  );
-                },
-              ),
-            ),
-          ],
+      backgroundColor: const Color(0xFFC986FF),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () => _signOut(context),
+          child: Text('Sign Out'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.purple,
+            padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+            textStyle: TextStyle(fontSize: 24),
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
@@ -86,7 +74,6 @@ class _CustomSearchPageState extends State<CustomSearchPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    // Navigate to the home page
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => const HomePage(),
@@ -104,7 +91,6 @@ class _CustomSearchPageState extends State<CustomSearchPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    // Logic for Search icon
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -113,10 +99,10 @@ class _CustomSearchPageState extends State<CustomSearchPage> {
                     );
                   },
                   icon: Icon(Icons.search),
-                  color: Colors.deepPurple,
+                  color: Colors.white,
                   tooltip: 'Search',
                 ),
-                Text('Search', style: TextStyle(fontSize: 12, color: Colors.deepPurple)),
+                Text('Search', style: TextStyle(fontSize: 12, color: Colors.white)),
               ],
             ),
             Column(
@@ -147,7 +133,6 @@ class _CustomSearchPageState extends State<CustomSearchPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    // Logic for Person icon
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -167,19 +152,18 @@ class _CustomSearchPageState extends State<CustomSearchPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    // Logic for Profile icon
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SettingsPage(), // Replace with your profile page
+                        builder: (context) => SettingsPage(),
                       ),
                     );
                   },
                   icon: Icon(Icons.settings),
-                  color: Colors.white,
+                  color: Colors.deepPurple,
                   tooltip: 'Settings',
                 ),
-                Text('Settings', style: TextStyle(fontSize: 12, color: Colors.white)),
+                Text('Settings', style: TextStyle(fontSize: 12, color: Colors.deepPurple)),
               ],
             ),
           ],
@@ -187,39 +171,4 @@ class _CustomSearchPageState extends State<CustomSearchPage> {
       ),
     );
   }
-
-
-  Widget _buildUserTile(QueryDocumentSnapshot<Object?> user) {
-    final nickname = user['nickname'] as String;
-    final userId = user['uid'] as String;
-
-    return GestureDetector(
-      onTap: () {
-        // Navigate to the PersonalInfoPage and pass the actual userId
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PersonalInfoPage(userId: userId),
-          ),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0x9E7C4DFF),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: ListTile(
-          title: Text(nickname),
-        ),
-      ),
-    );
-  }
-
-  }
-
-
-
+}

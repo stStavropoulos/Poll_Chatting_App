@@ -1,6 +1,6 @@
 import 'package:chatappdemocracy/Services/auth_service.dart';
 import 'package:chatappdemocracy/components/my_Button.dart';
-import 'package:chatappdemocracy/pages/HomePage.dart';
+import 'package:chatappdemocracy/pages/ProfileImage.dart'; // Import the upload photo page
 import 'package:flutter/material.dart';
 import '../components/my_text_field.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       // Navigate to the homepage after successful signup
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  UploadPhotoPage()));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.toString())),

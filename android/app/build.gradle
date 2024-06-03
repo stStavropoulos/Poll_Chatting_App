@@ -24,6 +24,9 @@ if (flutterVersionName == null) {
 }
 
 android {
+
+    compileSdkVersion 34
+
     namespace "com.example.chatappdemocracy"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion

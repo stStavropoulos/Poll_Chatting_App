@@ -43,6 +43,23 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       // Handle the case where the current user is not available
     }
   }
+  Future<void> _removeUserFromGroup() async {
+    try {
+      // Remove the user from the group in Firestore
+      await FirebaseFirestore.instance
+          .collection('group_chats')
+          .doc(widget.chatRoomId)
+          .update({
+        'participants': FieldValue.arrayRemove([_currentUserId]),
+      });
+
+      // Optionally, you can perform additional cleanup or actions
+      // For example, you might want to delete the group if there are no participants left
+
+    } catch (e) {
+      print('Error removing user from group: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -266,49 +283,26 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          Navigator.pop(context); // Close the dialog
-
                           // Implement the logic to leave the group
-                          try {
-                            // Get the current group chat document
-                            final groupChatDoc = await FirebaseFirestore.instance.collection('groupchats').doc(widget.chatRoomId).get();
-
-                            // Check if the document exists
-                            if (groupChatDoc.exists) {
-                              // Get the participants list
-                              List<String> participants = List<String>.from(groupChatDoc.data()?['participants'] ?? []);
-
-                              // Remove the current user from the participants list
-                              participants.remove(_currentUserId);
-
-                              // Update the participants in the Firestore document
-                              await groupChatDoc.reference.update({'participants': participants});
-
-                              // Navigate back to the home page
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => HomePage()),
-                                    (Route<dynamic> route) => false, // Remove all routes from the stack
-                              );
-                            } else {
-                              // Handle the case where the group chat document does not exist
-                              // You may want to show an error message or take appropriate action
-                            }
-                          } catch (e) {
-                            print('Error leaving group: $e');
-                            // Handle the error as needed
-                          }
+                          // For example, you can remove the user from the group
+                          await _removeUserFromGroup();
+                          // Navigate back to the homepage
+                          Navigator.pop(context); // Close the dialog
+                          Navigator.pop(context); // Close the drawer
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
                         },
                         child: Text("Leave"),
                       ),
-
-
                     ],
                   );
                 },
               );
             },
           ),
+
           // Add more items as needed
         ],
       ),
